@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ottava - Landing Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://kit.fontawesome.com/0a267e6f70.js" crossorigin="anonymous"></script>
+
+    
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        section{
+            overflow: hidden;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            z-index: 100;
+        }
+
+        .loading-screen .left, 
+        .loading-screen .right {
+            width: 50%;
+            height: 100%;
+            background: #4590f9;
+            position: absolute;
+            top: 0;
+            transition: all 1.2s ease-in-out;
+        }
+
+        .loading-screen .left {
+            left: 0;
+        }
+
+        .loading-screen .right {
+            right: 0;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes spin-slow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spin-slow 10s linear infinite;
+        }
+
+        /* animasi button */
+        @keyframes timbulBergetarTurun {
+            0% { transform: translateY(0); }
+            20% { transform: translateY(-5px); } /* Timbul sedikit */
+            40%, 50% { transform: translateY(-5px) rotate(-7deg); } /* Getar kiri */
+            45% { transform: translateY(-5px) rotate(7deg); } /* Getar kanan */
+            70% { transform: translateY(-5px); } /* Stabil sebentar */
+            100% { transform: translateY(0); } /* Turun kembali */
+        }
+
+        /* slider */
+
+        .carousel-container {
+            overflow: hidden;
+            width: 100%;
+            max-width: 1000px;
+            position: relative;
+        }
+
+        .carousel {
+            display: flex;
+            gap: 1.5rem;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carousel img {
+            flex-shrink: 0;
+            width: 150px;
+            max-height: 100px;
+            object-fit: contain;
+            opacity: 0.6;
+            filter: grayscale(100%);
+            transition: filter 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            cursor: pointer;
+        }
+
+        .carousel img:hover {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .carousel img {
+                width: 125px;
+                max-height: 80px;
+            }
+        }
+
+        nav a.active {
+            color: black !important;
+        }
+        nav a.active::after {
+            width: 100% !important;
+        }
+    </style>
+</head>
+<body style="background: #F5FAFF">
+
+    <div class="loading-screen">
+        <div class="left"></div>
+        <div class="right"></div>
+    </div>
+
+    <header class="fixed top-0 left-0 w-full bg-white shadow-md z-50">
+        <div class="flex justify-between items-center p-6 max-w-7xl mx-auto">
+            <!-- Logo -->
+            <a href="#">
+                Ottava
+            </a>
+
+            <!-- Navigation Menu (Hidden on Mobile) -->
+            <nav class="hidden md:flex gap-6">
+                <a href="#beranda" class="relative text-gray-600 hover:text-black after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full active:after:w-full">Beranda</a>
+                <a href="#moment" class="relative text-gray-600 hover:text-black after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full active:after:w-full">Moment</a>
+                <!-- <a href="#layanan" class="relative text-gray-600 hover:text-black after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full active:after:w-full">Layanan</a>
+                <a href="#testimoni" class="relative text-gray-600 hover:text-black after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full active:after:w-full">Testimoni</a>
+                <a href="#faq" class="relative text-gray-600 hover:text-black after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full active:after:w-full">FAQ</a> -->
+            </nav>
+
+            <!-- Action Buttons (Hidden on Mobile) -->
+            <!-- Mobile Menu Button -->
+            <button id="menu-toggle" class="md:hidden text-2xl focus:outline-none">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <nav id="mobile-menu" class="fixed inset-0 bg-white bg-opacity-95 flex flex-col items-center justify-center gap-6 transform translate-y-[-100%] opacity-0 transition-all duration-500 ease-in-out">
+            <!-- Tombol Close -->
+            <button id="close-menu" class="absolute top-5 right-5 text-3xl text-gray-700">
+                <i class="fa-solid fa-times"></i>
+            </button>
+
+            <a href="#">
+                Ottava
+            </a>
+            <a href="#beranda" class="relative text-gray-600 hover:text-black after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full active:after:w-full">Beranda</a>
+            <a href="#moment" class="relative text-gray-600 hover:text-black after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full active:after:w-full">Moment</a>
+            <!-- <a href="#layanan" class="relative text-gray-600 hover:text-black after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full active:after:w-full">Layanan</a>
+            <a href="#testimoni" class="relative text-gray-600 hover:text-black after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full active:after:w-full">Testimoni</a>
+            <a href="#faq" class="relative text-gray-600 hover:text-black after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full active:after:w-full">FAQ</a> -->
+        </nav>
+    </header>
+
+
+    <section id="beranda" class="text-center pt-32 sm:pt-32 md:pt-32 lg:pt-36 xl:pt-36 relative">
+        <h2 data-aos="zoom-in-down" data-aos-duration="2000" class="text-lg sm:text-xl md:text-2xl lg:text-4xl font-bold text-center max-w-[90%] md:max-w-full mx-auto">
+            <div class="flex flex-wrap justify-center gap-1">
+                <span class="text-blue-600 border-dashed border-2 border-blue-600 bg-blue-100 p-1 inline-block">
+                    Ottava 
+                </span>
+                <span class="whitespace-nowrap">Menyimpan Kenangan</span>
+            </div>
+            <div class="flex flex-wrap justify-center gap-1">
+                <span>Terbaik, Selalu Hidup</span>
+                <span class="text-purple-600 border-dashed border-2 border-purple-600 bg-purple-100 p-1 inline-block">
+                    dalam Ingatan
+                </span>
+            </div>
+        </h2>
+
+        <p data-aos="zoom-in" data-aos-duration="2000" class="mt-4 text-gray-500 max-w-xl mx-auto">
+            Tempat Ini buat nyimpen semua momen seru yang pernah kita lewatin bareng! 
+            Dari hari-hari penuh tawa di kelas, event seru yang kita jalanin bareng, sampai momen kebersamaan yang nggak terlupakan—semua ada di sini.
+            Dan setelah lulus? Hidup mungkin bawa kita ke jalan masing-masing, tapi kenangan kita bakal tetap abadi di sini. Jadi kapan pun kangen, 
+            tinggal mampir aja buat nostalgia! 📸
+        </p>
+
+        <!-- SVG Elements -->
+        <img data-aos="fade-right" data-aos-duration="2000" src="../assets/img/homepage/Pyramid.svg"
+            class="absolute top-32 sm:top-36 md:top-40 lg:top-44 xl:top-48
+            left-[4%] sm:left-[4%] md:left-[5%] lg:left-[7%] xl:left-[10%]
+            w-12 sm:w-20 md:w-24 lg:w-38 xl:w-42 animate-spin-slow"
+            alt="Segitiga">
+
+        <img data-aos="fade-left" data-aos-duration="2000" src="../assets/img/homepage/Helix.svg"
+            class="absolute top-32 sm:top-44 md:top-48 lg:top-52 xl:top-56
+            right-[3%] sm:right-[4%] md:right-[5%] lg:right-[8%] xl:right-[12%]
+            w-12 sm:w-20 md:w-24 lg:w-38 xl:w-42 animate-bounce"
+            alt="Per">
+    </section>
+
+    <section class="relative flex justify-center overflow-hidden">
+        <img src="../assets/img/homepage/Spheres.svg"
+            class="absolute top-10 sm:top-14 md:top-16 lg:top-20 xl:top-28
+            right-[0%] sm:right-[1%] md:right-[1%] lg:right-[2%] xl:right-[8%]
+            w-10 sm:w-14 md:w-16 lg:w-20 xl:w-24 animate-spin-slow"
+            alt="Bubble">
+        <img src="../assets/img/homepage/hero.png" alt="Dashboard" data-aos="zoom-in-up" data-aos-duration="2000" class="w-full max-w-2md sm:max-w-3md md:max-w-3lg lg:max-w-5xl xl:max-w-5xl rounded-lg">
+        <img src="../assets/img/homepage/rocket.svg" class="absolute bottom-8 sm:bottom-10 md:bottom-16 lg:bottom-16 xl:bottom-20
+            left-[2%] sm:left-[4%] md:left-[5%] lg:left-[10%] xl:left-[10%]
+            w-20 sm:w-32 md:w-40 lg:w-44 xl:w-48 animate-float"
+            alt="Roket">
+
+    </section>
+
+    <section id="kita" class="flex justify-center py-6 sm:py-6 md:py-3 lg:py-3 xl:py-3">
+        <div class="carousel-container flex justify-center">
+            <div class="carousel">
+                <img src="../assets/img/users/alfi.png" alt="Alfi">
+                <img src="../assets/img/users/antari.png" alt="Antari">
+                <img src="../assets/img/users/erdi.png" alt="Erdi">
+                <img src="../assets/img/users/fathur.png" alt="Fathur">
+                <img src="../assets/img/users/ghea.png" alt="Ghea">
+                <img src="../assets/img/users/ghifari.png" alt="Ghifari">
+                <img src="../assets/img/users/hasan.png" alt="Hasan">
+                <img src="../assets/img/users/imanudin.png" alt="Imanudin">
+                <img src="../assets/img/users/jauza.png" alt="Jauza">
+                <img src="../assets/img/users/kholiana.png" alt="Kholiana">
+                <img src="../assets/img/users/mirvan.png" alt="Irvan">
+                <img src="../assets/img/users/msabuth.png" alt="Sabuth">
+                <img src="../assets/img/users/nasywa.png" alt="Nasywa">
+                <img src="../assets/img/users/osy.png" alt="Osy">
+                <img src="../assets/img/users/rafael.png" alt="Rafael">
+                <img src="../assets/img/users/via.png" alt="Via">
+                <img src="../assets/img/users/vindra.png" alt="Vindra">
+                <img src="../assets/img/users/zaki.png" alt="Zaki">
+            </div>
+        </div>
+    </section>
+
+    <!-- Kegiatan -->
+    <section id="moment" class="py-12 flex flex-col md:flex-row items-center justify-center gap-12 text-center md:text-left">
+        <div class="max-w-md" data-aos="fade-right" data-aos-duration="1500">
+            <h2 class="text-3xl md:text-4xl font-bold">Moment kita</h2>
+            <p class="text-gray-500 mt-4 text-sm md:text-base">Momen kita tuh kayak puzzle yang pas banget—nggak perlu dipaksa, ngalir aja. Ada tawa, ada cerita, kadang random, tapi selalu bikin kangen. Entah itu ngobrol ngalor-ngidul, ketawa sampai perut sakit, atau cuma diem bareng tapi tetep nyaman. Pokoknya, nggak perlu sempurna, yang penting nyata dan kita nikmatin bareng.</p>
+        </div>
+
+        <div class="rounded-lg p-6 w-full md:w-1/2 relative overflow-hidden" data-aos="fade-left" data-aos-duration="1500">
+            <div class="flex transition-transform duration-500 ease-in-out w-full gap-3" id="slider">
+                <img src="../assets/img/moment/persami.jpg" class="w-full shadow-lg flex-shrink-0 rounded-lg slide object-cover h-48 md:h-auto">
+                <img src="../assets/img/moment/yearbook.jpg" class="w-full shadow-lg flex-shrink-0 rounded-lg slide object-cover h-48 md:h-auto">
+                <img src="../assets/img/moment/owabong.jpg" class="w-full shadow-lg flex-shrink-0 rounded-lg slide object-cover h-48 md:h-auto">
+                <img src="../assets/img/moment/bakar-pt2-1.jpg" class="w-full shadow-lg flex-shrink-0 rounded-lg slide object-cover h-48 md:h-auto">
+                <img src="../assets/img/moment/bakar-pt2-2.jpg" class="w-full shadow-lg flex-shrink-0 rounded-lg slide object-cover h-48 md:h-auto">
+                <img src="../assets/img/moment/bakar-pt2-3.jpg" class="w-full shadow-lg flex-shrink-0 rounded-lg slide object-cover h-48 md:h-auto">
+                <img src="../assets/img/moment/bakar-pt2-4.jpg" class="w-full shadow-lg flex-shrink-0 rounded-lg slide object-cover h-48 md:h-auto">
+                <img src="../assets/img/moment/bakar-pt2-5.jpg" class="w-full shadow-lg flex-shrink-0 rounded-lg slide object-cover h-48 md:h-auto">
+            </div>
+
+            <!-- Indicators -->
+            <div class="flex justify-center mt-4 space-x-2" id="indicators">
+                <div class="h-1 w-8 bg-blue-500 rounded transition-all"></div>
+                <div class="h-1 w-4 bg-white rounded transition-all"></div>
+                <div class="h-1 w-4 bg-white rounded transition-all"></div>
+                <div class="h-1 w-4 bg-white rounded transition-all"></div>
+                <div class="h-1 w-4 bg-white rounded transition-all"></div>
+                <div class="h-1 w-4 bg-white rounded transition-all"></div>
+                <div class="h-1 w-4 bg-white rounded transition-all"></div>
+                <div class="h-1 w-4 bg-white rounded transition-all"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- <section id="layanan" class="flex flex-col items-center justify-center p-6">
+        <div class="text-center md:mb-6" data-aos="zoom-in-down" data-aos-duration="1000">
+            <h2 class="text-2xl font-bold text-gray-800">Layanan Unggulan</h2>
+            <p class="text-gray-600 mt-2">Kami membantu Anda menjual dan memaksimalkan pendapatan dari produk digital dengan layanan terbaik.</p>
+        </div>
+        <div class="mx-auto p-6 rounded-lg flex flex-col md:flex-row items-center text-center md:text-left">
+            <div class="md:w-1/2 flex justify-center" data-aos="zoom-in" data-aos-duration="1500">
+                <div class="bg-blue-600 p-6 rounded-lg">
+                    <img src="{{ url('../assets/images/homepage/category-section.png') }}" alt="Chart" class="w-64 h-64 object-cover">
+                </div>
+            </div>
+            <div class="md:w-1/2 mt-6 md:mt-0 md:ml-8 flex flex-col items-center md:items-start">
+                <div class="mt-4 space-y-4">
+                    <div class="flex items-start" data-aos="fade-up" data-aos-duration="1000">
+                        <span class="text-blue-500 text-lg">&#9992;</span>
+                        <div class="ml-3">
+                            <h3 class="font-semibold text-gray-800">Program Afiliasi Digital</h3>
+                            <p class="text-gray-600 text-sm">Dapatkan komisi dari setiap produk digital yang berhasil terjual melalui rekomendasi Anda.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300">
+                        <span class="text-blue-500 text-lg">&#9992;</span>
+                        <div class="ml-3">
+                            <h3 class="font-semibold text-gray-800">Manajemen Produk</h3>
+                            <p class="text-gray-600 text-sm">Kami membantu dalam mengelola katalog produk, harga, dan stok agar tetap terkendali.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="600">
+                        <span class="text-blue-500 text-lg">&#9992;</span>
+                        <div class="ml-3">
+                            <h3 class="font-semibold text-gray-800">Optimasi Penjualan</h3>
+                            <p class="text-gray-600 text-sm">Strategi pemasaran yang efektif untuk meningkatkan visibilitas dan penjualan produk Anda.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="900">
+                        <span class="text-blue-500 text-lg">&#9992;</span>
+                        <div class="ml-3">
+                            <h3 class="font-semibold text-gray-800">Dukungan dan Konsultasi</h3>
+                            <p class="text-gray-600 text-sm">Tim kami siap memberikan panduan dan solusi terbaik sesuai kebutuhan Anda.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimoni" class="max-w-5xl mx-auto px-4 py-12">
+        <h2 data-aos="fade-right" data-aos-duration="1000" class="text-2xl md:text-3xl font-bold mb-6">
+            Kami Membantu Mereka Melesat, Sekarang <br class="hidden md:block"> Giliranmu Selanjutnya!
+        </h2>
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            
+            <div class="bg-white p-6 rounded-xl shadow-md min-h-[250px] flex flex-col" data-aos="fade-up" data-aos-duration="1000">
+                <div class="text-yellow-500 mb-3">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="text-gray-700 flex-grow">
+                    Melesat benar-benar membantu saya mendapatkan penghasilan tambahan! Produk digitalnya mudah dijual, dan komisinya menguntungkan.
+                </p>
+                <div class="flex items-center gap-3 mt-4">
+                    <img src="{{ url('../assets/images/users/user-1.jpg') }}" class="w-10 h-10 rounded-full" alt="User-1">
+                    <div>
+                        <p class="font-bold">Vindra Arya Yulian</p>
+                        <p class="text-gray-500 text-sm">Web Developer</p>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="bg-white p-6 rounded-xl shadow-md min-h-[250px] flex flex-col" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="500">
+                <div class="text-yellow-500 mb-3">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="text-gray-700 flex-grow">
+                    Saya awalnya ragu, tapi setelah mencoba, ternyata sistemnya gampang banget. Sekarang saya bisa dapat komisi tanpa harus ribet bikin produk sendiri.
+                </p>
+                <div class="flex items-center gap-3 mt-4">
+                    <img src="{{ url('../assets/images/users/user-2.jpg') }}" class="w-10 h-10 rounded-full" alt="User-2">
+                    <div>
+                        <p class="font-bold">M Fathur Pratama</p>
+                        <p class="text-gray-500 text-sm">Web Developer</p>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="bg-white p-6 rounded-xl shadow-md min-h-[250px] flex flex-col" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="900">
+                <div class="text-yellow-500 mb-3">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="text-gray-700 flex-grow">
+                    Melesat memberikan peluang yang nyata! Saya bisa menjual produk digital berkualitas tanpa modal besar, dan hasilnya sangat memuaskan.
+                </p>
+                <div class="flex items-center gap-3 mt-4">
+                    <img src="{{ url('../assets/images/users/user-3.webp') }}" class="w-10 h-10 rounded-full" alt="User-3">
+                    <div>
+                        <p class="font-bold">Rizqy Bagus Saputra</p>
+                        <p class="text-gray-500 text-sm">Web Developer</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+
+
+    <footer class="bg-gray-900 text-white py-10 rounded-t-3xl">
+        <!-- Copyright -->
+        <div class="text-center text-sm text-gray-400 mt-10">
+            <p>2025 &copy; Ottava.</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            setTimeout(() => {
+                document.querySelector(".loading-screen .left").style.transform = "translateX(-100%)";
+                document.querySelector(".loading-screen .right").style.transform = "translateX(100%)";
+            }, 500); // Delay sebelum animasi mulai
+
+            setTimeout(() => {
+                document.querySelector(".loading-screen").style.display = "none";
+                document.querySelector(".content").style.display = "block";
+            }, 1500); // Delay sebelum halaman muncul
+        });
+    </script>
+
+
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const closeMenu = document.getElementById('close-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuLinks = document.querySelectorAll('#mobile-menu a, nav a'); // Link menu mobile & desktop
+        const header = document.querySelector('header');
+        const sections = document.querySelectorAll("section"); // Semua section di halaman
+        const navLinks = document.querySelectorAll("nav a"); // Semua link di navbar
+
+        // Fungsi untuk menampilkan menu mobile
+        menuToggle.addEventListener('click', function () {
+            mobileMenu.classList.remove('translate-y-[-100%]', 'opacity-0');
+            mobileMenu.classList.add('translate-y-0', 'opacity-100');
+        });
+
+        // Fungsi untuk menutup menu mobile
+        closeMenu.addEventListener('click', function () {
+            mobileMenu.classList.remove('translate-y-0', 'opacity-100');
+            mobileMenu.classList.add('translate-y-[-100%]', 'opacity-0');
+        });
+
+        // Menutup menu saat klik di luar area menu
+        document.addEventListener('click', function (event) {
+            if (!menuToggle.contains(event.target) && !mobileMenu.contains(event.target) && !closeMenu.contains(event.target)) {
+                mobileMenu.classList.remove('translate-y-0', 'opacity-100');
+                mobileMenu.classList.add('translate-y-[-100%]', 'opacity-0');
+            }
+        });
+
+        // Menutup menu jika layar di-resize ke ukuran desktop
+        window.addEventListener('resize', function () {
+            if (window.innerWidth >= 768) {
+                mobileMenu.classList.remove('translate-y-0', 'opacity-100');
+                mobileMenu.classList.add('translate-y-[-100%]', 'opacity-0');
+            }
+        });
+
+        // Menutup menu & smooth scroll saat klik link di menu mobile
+        menuLinks.forEach(link => {
+            link.addEventListener('click', function (event) {
+                if (mobileMenu.classList.contains('opacity-100')) {
+                    mobileMenu.classList.remove('translate-y-0', 'opacity-100');
+                    mobileMenu.classList.add('translate-y-[-100%]', 'opacity-0');
+                }
+
+                const targetId = this.getAttribute('href').substring(1); // Ambil ID target
+                const targetElement = document.getElementById(targetId);
+
+                if (targetElement) {
+                    event.preventDefault(); // Hindari loncatan default
+                    const headerHeight = header.offsetHeight;
+                    const targetPosition = targetElement.offsetTop - headerHeight - 20; // 20px tambahan agar tidak terlalu rapat
+
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Fungsi untuk menambahkan class active berdasarkan posisi scroll
+        function activateNavOnScroll() {
+            let scrollPosition = window.scrollY + header.offsetHeight + 50; // Offset agar lebih akurat
+
+            sections.forEach(section => {
+                if (scrollPosition >= section.offsetTop && scrollPosition < section.offsetTop + section.offsetHeight) {
+                    navLinks.forEach(link => link.classList.remove("active")); // Hapus active dari semua link
+                    document.querySelector(`nav a[href="#${section.id}"]`)?.classList.add("active"); // Tambahkan active ke link yang sesuai
+                }
+            });
+        }
+
+        // Jalankan fungsi saat scroll
+        window.addEventListener("scroll", activateNavOnScroll);
+    </script>
+
+    <script>
+        function toggleFAQ(element) {
+            const content = element.nextElementSibling;
+            const icon = element.querySelector('i');
+            content.classList.toggle('hidden');
+            icon.classList.toggle('fa-plus');
+            icon.classList.toggle('fa-minus');
+        }
+    </script>
+
+    <script>
+        const carousel = document.querySelector('.carousel');
+        setInterval(() => {
+            const firstItem = carousel.firstElementChild;
+            carousel.style.transition = "transform 0.5s ease-in-out";
+            carousel.style.transform = "translateX(-170px)"; // Geser ke kiri
+
+            setTimeout(() => {
+                carousel.appendChild(firstItem); // Pindahkan elemen pertama ke belakang antrian
+                carousel.style.transition = "none"; // Hilangkan transisi sejenak
+                carousel.style.transform = "translateX(0)"; // Reset posisi
+            }, 500);
+        }, 2000);
+    </script>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll(".slide");
+        const slider = document.getElementById("slider");
+        const indicators = document.querySelectorAll("#indicators div");
+
+        function showSlide(index) {
+            slider.style.transform = `translateX(-${index * 100}%)`;
+            indicators.forEach((indicator, i) => {
+                indicator.classList.toggle("w-8", i === index);
+                indicator.classList.toggle("w-4", i !== index);
+                indicator.classList.toggle("bg-blue-500", i === index);
+                indicator.classList.toggle("bg-white", i !== index);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        setInterval(nextSlide, 3000);
+    </script>
+</body>
+</html>
